@@ -1,7 +1,24 @@
 ## 📝 Recent Commits
 
+## 📝 Recent Commits
+
 <!-- COMMITS:START -->
-*This section will be auto-updated by GitHub Actions*
+
+| Hash | Message | Author | Date |
+|------|---------|--------|------|
+| [`0a9c865`](https://github.com/dudududukim/OpenAI_S2S/commit/0a9c865) | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
+| [`
+fdcdeff`](https://github.com/dudududukim/OpenAI_S2S/commit/
+fdcdeff) | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
+| [`
+5b7ddc7`](https://github.com/dudududukim/OpenAI_S2S/commit/
+5b7ddc7) | fix: readme (webrtc + websocket bash) | Duhyeon | 2025-08-09 |
+| [`
+68b39b0`](https://github.com/dudududukim/OpenAI_S2S/commit/
+68b39b0) | feat: add OpenAI S2S voice agents (WebSocket &amp; WebRTC) | Duhyeon | 2025-08-09 |
+
+*Last updated: 2025-08-09 10:58:03 UTC*
+
 <!-- COMMITS:END -->
 
 
