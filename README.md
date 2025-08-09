@@ -38,6 +38,13 @@ echo "OPENAI_API_KEY=your_api_key_here" > .env
 python main.py
 ```
 
+# git action
+
+```bash
+# if action occured, do below command in local
+git pull --rebase origin main
+```
+
 ## 📝 Recent Commits
 
 | Hash | Message | Author | Date |
