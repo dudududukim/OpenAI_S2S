@@ -1,27 +1,3 @@
-## 📝 Recent Commits
-
-## 📝 Recent Commits
-
-<!-- COMMITS:START -->
-
-| Hash | Message | Author | Date |
-|------|---------|--------|------|
-| [`0a9c865`](https://github.com/dudududukim/OpenAI_S2S/commit/0a9c865) | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
-| [`
-fdcdeff`](https://github.com/dudududukim/OpenAI_S2S/commit/
-fdcdeff) | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
-| [`
-5b7ddc7`](https://github.com/dudududukim/OpenAI_S2S/commit/
-5b7ddc7) | fix: readme (webrtc + websocket bash) | Duhyeon | 2025-08-09 |
-| [`
-68b39b0`](https://github.com/dudududukim/OpenAI_S2S/commit/
-68b39b0) | feat: add OpenAI S2S voice agents (WebSocket &amp; WebRTC) | Duhyeon | 2025-08-09 |
-
-*Last updated: 2025-08-09 10:58:03 UTC*
-
-<!-- COMMITS:END -->
-
-
 # 1. webRTC based S2S
 
 [OpenAI Voice Agents Quickstart](https://openai.github.io/openai-agents-js/guides/voice-agents/quickstart/)
@@ -61,3 +37,11 @@ echo "OPENAI_API_KEY=your_api_key_here" > .env
 
 python main.py
 ```
+
+## 📝 Recent Commits
+
+*This section is automatically updated by GitHub Actions*
+
+---
+
+**Maintained by GitHub Actions** • Last manual update: 2025-08-09

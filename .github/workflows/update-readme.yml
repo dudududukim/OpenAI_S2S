@@ -6,7 +6,7 @@ on:
     paths-ignore:
       - 'README.md'
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
   workflow_dispatch:
 
 permissions:
@@ -16,7 +16,8 @@ jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -25,18 +26,19 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Update README
+      - name: Update README with commit log
         run: python update_readme.py
 
-      - name: Commit changes
-        shell: bash
+      - name: Check for changes and commit
         run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          
           if [ -n "$(git status --porcelain README.md)" ]; then
-            git config --local user.name "github-actions[bot]"
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
             git add README.md
-            git commit -m "docs: auto-update README with latest commits [skip ci]"
+            git commit -m "docs: auto-update commit log [skip ci]"
             git push
+            echo "README updated and pushed"
           else
-            echo "No README changes."
+            echo "No changes to README.md"
           fi
