@@ -1,3 +1,10 @@
+## 📝 Recent Commits
+
+<!-- COMMITS:START -->
+*This section will be auto-updated by GitHub Actions*
+<!-- COMMITS:END -->
+
+
 # 1. webRTC based S2S
 
 [OpenAI Voice Agents Quickstart](https://openai.github.io/openai-agents-js/guides/voice-agents/quickstart/)

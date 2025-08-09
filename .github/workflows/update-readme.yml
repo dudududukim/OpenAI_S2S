@@ -1,0 +1,40 @@
+name: Update README with Commit Log
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Update README
+        run: python update_readme.py
+
+      - name: Commit changes
+        run: |
+          if [[ -n "$(git status --porcelain README.md)" ]]; then
+            git config --local user.name "github-actions[bot]"
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "docs: auto-update README with latest commits [skip ci]"
+            git push
+          else
+            echo "No README changes."
