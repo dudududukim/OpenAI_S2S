@@ -5,7 +5,10 @@
 webRTC based OpenAI realtime api should be written on JS type.
 
 ```bash
-
+npm install
+echo "OPENAI_API_KEY=your_api_key_here" > .env
+npm run server
+npm run dev
 ```
 
 ```text
@@ -14,4 +17,23 @@ webRTC based OpenAI realtime api should be written on JS type.
 [내 서버] <-- ephemeral key -- [OpenAI]
 [브라우저] <-- ephemeral key -- [내 서버]
 [브라우저] --(ephemeral key, WebRTC)--> [OpenAI Realtime API]
+```
+
+# 2. webSocket based S2S
+
+```text
+[Python Client] --(WebSocket, API Key)--> [OpenAI Realtime API]
+     ↑↓
+[Audio I/O (PyAudio)]
+```
+
+Setup
+
+```bash
+# with venv
+pip install -r requirements.txt
+
+echo "OPENAI_API_KEY=your_api_key_here" > .env
+
+python main.py
 ```
