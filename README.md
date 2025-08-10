@@ -21,6 +21,15 @@ npm run dev
 
 # 2. webSocket based S2S
 
+현재 코드는 미완성 / 대화는 되지만 지금 audio output과 server output의 sync를 관리해야됨.
+
+1. Server VAD가 사용자 발화를 감지하면 즉시 server-side interruption이 걸리고, 새로운 TTS audio delta 전송이 중단된다.
+2. 하지만 Client 측은 이미 받은 audio가 WebSocket → AudioPlayer queue → PyAudio buffer에 남아 계속 재생된다.
+3. 이 local playback latency가 server 이벤트 타이밍보다 커서, 실제로는 끊겼어도 귀에는 TTS가 이어지는 것처럼 들린다.
+4. 그 결과 대화 흐름이 밀리고, 새 response는 기존 audio가 drain될 때까지 체감상 지연된다.
+5. 대응: client-side에서 audio queue 즉시 flush/stop, buffer 최소화, 필요 시 WebRTC로 전환해 end-to-end latency와 sync 오차를 줄인다.
+
+
 ```text
 [Python Client] --(WebSocket, API Key)--> [OpenAI Realtime API]
      ↑↓
