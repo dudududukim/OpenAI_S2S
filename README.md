@@ -58,6 +58,9 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `5f0dba7` | fix: websocket version slight change(not perfect) | Duhyeon | 2025-08-10 |
+| `390f67f` | refactor: readme git action tips | Duhyeon | 2025-08-09 |
+| `672833d` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-09 |
 | `cde97ec` | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
 | `92ced4c` | docs: auto-update README with latest commits [skip ci] | github-actions[bot] | 2025-08-09 |
 | `0a9c865` | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
@@ -65,4 +68,4 @@ git pull --rebase origin main
 | `5b7ddc7` | fix: readme (webrtc + websocket bash) | Duhyeon | 2025-08-09 |
 | `68b39b0` | feat: add OpenAI S2S voice agents (WebSocket & WebRTC) | Duhyeon | 2025-08-09 |
 
-*Last updated: 2025-08-09 11:06:39 UTC*
+*Last updated: 2025-08-10 07:08:05 UTC*
