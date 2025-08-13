@@ -1,13 +1,33 @@
 <!doctype html>
-<html>
+<html data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Voice Agent (WebRTC)</title>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2/css/pico.min.css">
+    <style>
+      body { max-width: clamp(960px, 92vw, 1280px); margin: 3rem auto; padding: 0 1rem; }
+      .controls { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem; margin-bottom: 1rem;}
+      #log {
+        height: 55vh;
+        overflow: auto;
+        border-radius: 12px;
+        padding: 1rem;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,.12);
+        box-shadow: 0 1px 6px rgba(0,0,0,.05);
+      }
+      #start { background-color: #0a71b3; border-color: #0a71b3; color: #fff; }
+      #stop, #save { background-color: #5a6781; border-color: #5a6781; color: #fff; }
+      #start:hover, #stop:hover, #save:hover { filter: brightness(0.95); }
+    </style>
   </head>
   <body>
-    <button id="start">Start</button>
-    <button id="stop">Stop</button>
+    <div class="controls">
+      <button id="start">Start</button>
+      <button id="stop" class="secondary">Stop</button>
+      <button id="save" class="secondary">Save</button>
+    </div>
     <pre id="log"></pre>
     <script type="module" src="/src/main.ts"></script>
   </body>

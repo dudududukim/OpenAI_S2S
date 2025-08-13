@@ -19,6 +19,9 @@ npm run dev
 [브라우저] --(ephemeral key, WebRTC)--> [OpenAI Realtime API]
 ```
 
+## Browser
+![alt text](assets/webrtc_web.png)
+
 # 2. webSocket based S2S
 
 현재 코드는 미완성 / 대화는 되지만 지금 audio output과 server output의 sync를 관리해야됨.
@@ -29,6 +32,7 @@ npm run dev
 4. 그 결과 대화 흐름이 밀리고, 새 response는 기존 audio가 drain될 때까지 체감상 지연된다.
 5. 대응: client-side에서 audio queue 즉시 flush/stop, buffer 최소화, 필요 시 WebRTC로 전환해 end-to-end latency와 sync 오차를 줄인다.
 
+- 해결책으로 `conversation.item.truncate`를 찾아보기는 해야됨(cancel+truncate+flush)
 
 ```text
 [Python Client] --(WebSocket, API Key)--> [OpenAI Realtime API]

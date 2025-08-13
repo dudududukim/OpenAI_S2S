@@ -1,3 +1,6 @@
+# folders
+voice-agent-webrtc/log_html/
+
 # Logs
 logs
 *.log
