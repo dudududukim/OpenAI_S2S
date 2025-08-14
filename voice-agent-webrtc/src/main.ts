@@ -24,8 +24,18 @@ function log(typeOrFirstArg: LogType | any, ...args: any[]) {
         logArgs = [typeOrFirstArg, ...args];
     }
 
-    const line = logArgs.map(a => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ');
-    console.log(...logArgs);
+    const line = logArgs.map(a => {
+      if (typeof a === 'string') {
+        return a;
+      }
+      return JSON.stringify(a, (key, value) => {
+        // audio 필드가 문자열이고 길면 짧게 자르기
+        if (key === 'audio' && typeof value === 'string' && value.length > 50) {
+          return value.substring(0, 50) + '...[audio data truncated]';
+        }
+        return value;
+      });
+    }).join(' ');
 
     // 색깔별 스타일 적용
     const colors = {
@@ -38,6 +48,45 @@ function log(typeOrFirstArg: LogType | any, ...args: any[]) {
     logEl.innerHTML += coloredLine;
     logEl.scrollTop = logEl.scrollHeight;
 }
+
+// -------------- code(history log) --------------
+
+type HistItem = {
+  id: string;
+  role: 'user' | 'assistant' | string;
+  type: string;          // 'message' 등
+  status?: string;       // 'in_progress'/'completed' 등
+  text?: string;         // transcript or partial text
+  truncatedAtMs?: number;
+};
+
+const historyStore: HistItem[] = [];
+
+function renderHistory() {
+  const wrap = document.getElementById('history-list');
+  if (!wrap) return;
+
+  const html = historyStore.map(it => {
+    // const text = (it.text ?? '').slice(0, 120).replace(/\n/g, ' ');
+    const text = (it.text ?? '');
+    return `
+      <div class="item">
+        <div class="meta">
+          <span class="role">${it.role}</span>
+          <span>#${it.id.slice(-6)}</span>
+          <span>· ${it.type}${it.status ? `/${it.status}` : ''}</span>
+          ${it.truncatedAtMs != null ? `<span class="truncated">TRUNCATED @${it.truncatedAtMs}ms</span>` : ''}
+        </div>
+        ${text ? `<div>${text}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  wrap.innerHTML = html || '<div class="meta">— no items —</div>';
+}
+
+
+// -------------- code(event log) --------------
 
 async function getClientKey(): Promise<string> {
     const r = await fetch('http://localhost:8787/session', { method: 'POST' });
@@ -121,8 +170,14 @@ startBtn.onclick = async () => {
     });
 
     session.on('history_updated', (history: any[]) => {
-        log('session', 'history_updated', { length: Array.isArray(history) ? history.length : 0 });
+        // console.log('Available attributes:', Object.keys(history[0].content));
+        // console.log('Available attributes:',history[0].content);
+        // log('session', 'history_updated', { length: Array.isArray(history) ? history.length : 0 });
+        log('session', 'history_updated', history);
+        // renderHistory();
+        updateHistoryFromEvent(history);
     });
+    
 
     // Guardrails / Tools / Errors
     session.on('tool_approval_requested', (ctx: any, agent: any, req: any) => {
@@ -150,6 +205,7 @@ startBtn.onclick = async () => {
         if (type.includes('.delta')) return;
         log('session', 'transport_event', `[${side}]`, type);
     });
+
 
     const apiKey = await getClientKey();
     await session.connect({ apiKey });
@@ -198,3 +254,37 @@ saveBtn.onclick = () => {
   URL.revokeObjectURL(url);
   a.remove();
 };
+
+function updateHistoryFromEvent(historyData: any[]) {
+    historyData.forEach(item => {
+        const existingIndex = historyStore.findIndex(h => h.id === item.itemId);
+        
+        if (existingIndex !== -1) {
+            // 기존 항목 업데이트
+            const existingItem = historyStore[existingIndex];
+            
+            // transcript 정보가 있으면 업데이트
+            if (item.content && item.content[0] && item.content[0].transcript) {
+                existingItem.text = item.content[0].transcript;
+            }
+            
+            // status 업데이트
+            if (item.status) {
+                existingItem.status = item.status;
+            }
+        } else {
+            // 새 항목 추가
+            const newItem: HistItem = {
+                id: item.itemId,
+                role: item.role || 'user',
+                type: item.type || 'message',
+                status: item.status,
+                text: item.content?.[0]?.transcript || ''
+            };
+            historyStore.push(newItem);
+        }
+    });
+    
+    // UI 업데이트
+    renderHistory();
+}
