@@ -62,6 +62,8 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `ef73530` | feat: history hamburger menu added(you can see the transcription of webRTC S2S conversation) | Duhyeon | 2025-08-14 |
+| `4c4d23f` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-13 |
 | `8500eba` | feat: webUI applied for logging realtimesession events | Duhyeon | 2025-08-13 |
 | `0513586` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-11 |
 | `06af719` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-10 |
@@ -70,7 +72,5 @@ git pull --rebase origin main
 | `672833d` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-09 |
 | `cde97ec` | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
 | `92ced4c` | docs: auto-update README with latest commits [skip ci] | github-actions[bot] | 2025-08-09 |
-| `0a9c865` | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
-| `fdcdeff` | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
 
-*Last updated: 2025-08-13 06:10:27 UTC*
+*Last updated: 2025-08-14 12:07:53 UTC*
