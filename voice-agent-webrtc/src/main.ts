@@ -98,118 +98,132 @@ async function getClientKey(): Promise<string> {
 startBtn.onclick = async () => {
     if (session) return;
 
-    const agent = new RealtimeAgent({
-        name: 'Assistant',
-        instructions: 'You are a helpful voice assistant.'
-    });
+    try {const agent = new RealtimeAgent({
+          name: 'Assistant',
+          instructions: 'You are a helpful voice assistant.'
+      });
 
-    session = new RealtimeSession(agent, {
-        model: 'gpt-4o-realtime-preview-2025-06-03'
-    });
+      session = new RealtimeSession(agent, {
+          model: 'gpt-4o-realtime-preview-2025-06-03',
+          config: {
+            inputAudioTranscription: {
+              model: 'gpt-4o-mini-transcribe',
+              language: 'ko',
+            },
+          }
+      });
 
-    // Transport 이벤트 (주황색으로 표시)
-    // session.transport.on('*', (evt) => log('transport', 'transport', evt?.type || 'event', evt));
+      // Transport 이벤트에서 delta 이벤트들을 필터링
+      session.transport.on('*', (evt) => {
+          const eventType = evt?.type || 'event';
+          
+          // delta 이벤트들은 제외
+          if (eventType.includes('.delta')) {
+              return; // 로그하지 않음
+          }
 
-    // Transport 이벤트에서 delta 이벤트들을 필터링
-    session.transport.on('*', (evt) => {
-        const eventType = evt?.type || 'event';
-        
-        // delta 이벤트들은 제외
-        if (eventType.includes('.delta')) {
-            return; // 로그하지 않음
-        }
-        
-        log('transport', 'transport', eventType, evt);
-    });
-
-
-    // --- Session 이벤트들 (파란색으로 표시) ---
-    
-    // Agents lifecycle
-    session.on('agent_start', (ctx: any, agent: any) => {
-        log('session', 'agent_start', { agent: agent?.name });
-    });
-
-    session.on('agent_end', (ctx: any, agent: any, output: string) => {
-        log('session', 'agent_end', { agent: agent?.name, preview: String(output ?? '').slice(0, 160) });
-    });
-
-    session.on('agent_handoff', (ctx: any, from: any, to: any) => {
-        log('session', 'agent_handoff', { from: from?.name, to: to?.name });
-    });
-
-    session.on('agent_tool_start', (ctx: any, agent: any, tool: any, args: any) => {
-        log('session', 'agent_tool_start', { agent: agent?.name, tool: tool?.name, args });
-    });
-
-    session.on('agent_tool_end', (ctx: any, agent: any, tool: any, output: any, raw: any) => {
-        log('session', 'agent_tool_end', { agent: agent?.name, tool: tool?.name, outputPreview: String(output ?? '').slice(0, 160) });
-    });
-
-    // Audio
-    session.on('audio_start', (ctx: any, agent: any) => {
-        log('session', 'audio_start', { agent: agent?.name });
-    });
-
-    session.on('audio', (e: any) => {
-        const bytes = e?.data?.byteLength ?? 0;
-        log('session', 'audio', { bytes, note: bytes ? 'audio buffer received' : undefined });
-    });
-
-    session.on('audio_stopped', (ctx: any, agent: any) => {
-        log('session', 'audio_stopped', { agent: agent?.name });
-    });
-
-    session.on('audio_interrupted', (ctx: any, agent: any) => {
-        log('session', 'audio_interrupted', { agent: agent?.name });
-    });
-
-    // History
-    session.on('history_added', (item: any) => {
-        log('session', 'history_added', summarizeItem(item));
-    });
-
-    session.on('history_updated', (history: any[]) => {
-        // console.log('Available attributes:', Object.keys(history[0].content));
-        // console.log('Available attributes:',history[0].content);
-        // log('session', 'history_updated', { length: Array.isArray(history) ? history.length : 0 });
-        log('session', 'history_updated', history);
-        // renderHistory();
-        updateHistoryFromEvent(history);
-    });
-    
-
-    // Guardrails / Tools / Errors
-    session.on('tool_approval_requested', (ctx: any, agent: any, req: any) => {
-        log('session', 'tool_approval_requested', {
-            tool: req?.rawItem?.name,
-            approvalItem: req?.approvalItem?.id || req?.approvalItem?.name
-        });
-    });
-
-    session.on('guardrail_tripped', (ctx: any, agent: any, tripwire: any, extra: any) => {
-        log('session', 'guardrail_tripped', {
-            agent: agent?.name,
-            tripwire: tripwire?.tripwire?.name || tripwire?.tripwire_id || 'unknown'
-        });
-    });
-
-    session.on('error', (err: any) => {
-        log('session', 'session_error', normalizeError(err));
-    });
-
-    // Raw transport echo (SDK re-emits)
-    session.on('transport_event', (evt: any) => {
-        const side = evt?.mode || evt?.direction || evt?.source || 'unknown';
-        const type = evt?.type || evt?.event?.type || 'event';
-        if (type.includes('.delta')) return;
-        log('session', 'transport_event', `[${side}]`, type);
-    });
+          if (eventType === 'error') {
+            showPopup(evt.error?.message ?? JSON.stringify(evt));   // OpenAI Agents SDK bug!
+          }
+          
+          log('transport', 'transport', eventType, evt);
+      });
 
 
-    const apiKey = await getClientKey();
-    await session.connect({ apiKey });
-    log('connected');
+      // --- Session 이벤트들 (파란색으로 표시) ---
+      
+      // Agents lifecycle
+      session.on('agent_start', (ctx: any, agent: any) => {
+          log('session', 'agent_start', { agent: agent?.name });
+      });
+
+      session.on('agent_end', (ctx: any, agent: any, output: string) => {
+          log('session', 'agent_end', { agent: agent?.name, preview: String(output ?? '').slice(0, 160) });
+      });
+
+      session.on('agent_handoff', (ctx: any, from: any, to: any) => {
+          log('session', 'agent_handoff', { from: from?.name, to: to?.name });
+      });
+
+      session.on('agent_tool_start', (ctx: any, agent: any, tool: any, args: any) => {
+          log('session', 'agent_tool_start', { agent: agent?.name, tool: tool?.name, args });
+      });
+
+      session.on('agent_tool_end', (ctx: any, agent: any, tool: any, output: any, raw: any) => {
+          log('session', 'agent_tool_end', { agent: agent?.name, tool: tool?.name, outputPreview: String(output ?? '').slice(0, 160) });
+      });
+
+      // Audio
+      session.on('audio_start', (ctx: any, agent: any) => {
+          log('session', 'audio_start', { agent: agent?.name });
+      });
+
+      session.on('audio', (e: any) => {
+          const bytes = e?.data?.byteLength ?? 0;
+          log('session', 'audio', { bytes, note: bytes ? 'audio buffer received' : undefined });
+      });
+
+      session.on('audio_stopped', (ctx: any, agent: any) => {
+          log('session', 'audio_stopped', { agent: agent?.name });
+      });
+
+      session.on('audio_interrupted', (ctx: any, agent: any) => {
+          log('session', 'audio_interrupted', { agent: agent?.name });
+      });
+
+      // History
+      session.on('history_added', (item: any) => {
+          log('session', 'history_added', summarizeItem(item));
+      });
+
+      session.on('history_updated', (history: any[]) => {
+          // console.log('Available attributes:', Object.keys(history[0].content));
+          // console.log('Available attributes:',history[0].content);
+          // log('session', 'history_updated', { length: Array.isArray(history) ? history.length : 0 });
+          log('session', 'history_updated', history);
+          // renderHistory();
+          updateHistoryFromEvent(history);
+      });
+      
+
+      // Guardrails / Tools / Errors
+      session.on('tool_approval_requested', (ctx: any, agent: any, req: any) => {
+          log('session', 'tool_approval_requested', {
+              tool: req?.rawItem?.name,
+              approvalItem: req?.approvalItem?.id || req?.approvalItem?.name
+          });
+      });
+
+      session.on('guardrail_tripped', (ctx: any, agent: any, tripwire: any, extra: any) => {
+          log('session', 'guardrail_tripped', {
+              agent: agent?.name,
+              tripwire: tripwire?.tripwire?.name || tripwire?.tripwire_id || 'unknown'
+          });
+      });
+
+      session.on('error', (err: any) => {
+          showPopup(err.message);
+          log('session', 'session_error', normalizeError(err));
+      });
+
+      // Raw transport echo (SDK re-emits)
+      session.on('transport_event', (evt: any) => {
+          const side = evt?.mode || evt?.direction || evt?.source || 'unknown';
+          const type = evt?.type || evt?.event?.type || 'event';
+          if (type.includes('.delta')) return;
+          log('session', 'transport_event', `[${side}]`, type);
+      });
+
+
+      const apiKey = await getClientKey();
+      await session.connect({ apiKey });
+      
+      session.sendMessage("안녕하세요! 대화를 시작하겠습니다.");
+      log('connected');
+    } catch (error) {
+      log("session", "💥 연결 실패:", error);
+      session = null;
+    }
 };
 
 stopBtn.onclick = () => {
@@ -255,36 +269,51 @@ saveBtn.onclick = () => {
   a.remove();
 };
 
-function updateHistoryFromEvent(historyData: any[]) {
-    historyData.forEach(item => {
+function updateHistoryFromEvent(history: any[]) {
+    history.forEach(item => {
         const existingIndex = historyStore.findIndex(h => h.id === item.itemId);
         
         if (existingIndex !== -1) {
-            // 기존 항목 업데이트
             const existingItem = historyStore[existingIndex];
             
-            // transcript 정보가 있으면 업데이트
-            if (item.content && item.content[0] && item.content[0].transcript) {
-                existingItem.text = item.content[0].transcript;
+            if (item.content && item.content[0]) {
+                const content = item.content[0];
+                const text = content.transcript || content.text || '';
+                if (text) {
+                    existingItem.text = text;
+                }
             }
             
-            // status 업데이트
             if (item.status) {
                 existingItem.status = item.status;
             }
         } else {
-            // 새 항목 추가
+            const content = item.content?.[0];
+            const text = content?.transcript || content?.text || '';
+            
             const newItem: HistItem = {
                 id: item.itemId,
                 role: item.role || 'user',
                 type: item.type || 'message',
                 status: item.status,
-                text: item.content?.[0]?.transcript || ''
+                text: text
             };
             historyStore.push(newItem);
         }
     });
     
-    // UI 업데이트
     renderHistory();
+}
+
+
+function showPopup(message: string) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = message;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 200);
+  }, 4000);
 }
