@@ -62,6 +62,8 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `1b01044` | feat: error box added and session.message send if session started | Duhyeon | 2025-08-15 |
+| `b1aee27` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-14 |
 | `ef73530` | feat: history hamburger menu added(you can see the transcription of webRTC S2S conversation) | Duhyeon | 2025-08-14 |
 | `4c4d23f` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-13 |
 | `8500eba` | feat: webUI applied for logging realtimesession events | Duhyeon | 2025-08-13 |
@@ -70,7 +72,5 @@ git pull --rebase origin main
 | `5f0dba7` | fix: websocket version slight change(not perfect) | Duhyeon | 2025-08-10 |
 | `390f67f` | refactor: readme git action tips | Duhyeon | 2025-08-09 |
 | `672833d` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-09 |
-| `cde97ec` | feat: auto-update README with commit log | Duhyeon | 2025-08-09 |
-| `92ced4c` | docs: auto-update README with latest commits [skip ci] | github-actions[bot] | 2025-08-09 |
 
-*Last updated: 2025-08-14 12:07:53 UTC*
+*Last updated: 2025-08-15 10:47:59 UTC*
