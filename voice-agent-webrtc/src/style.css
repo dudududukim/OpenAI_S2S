@@ -68,7 +68,7 @@ body {
   height: calc(100vh - 30vh);
   white-space: pre;
   overflow-x: auto;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
   user-select: text;
   -webkit-user-select: text;
 }
@@ -102,7 +102,20 @@ body {
 
 /* History Panel */
 .history-panel {
-  @apply fixed top-0 right-0 h-full w-80 bg-white shadow-2xl border-l border-gray-200 transform translate-x-full transition-transform duration-300 ease-out z-50;
+  @apply fixed top-0 right-0 h-full w-80 bg-white shadow-2xl border-l
+         border-gray-200 transform translate-x-full transition-transform
+         duration-300 ease-out z-50;
+}
+
+/* header는 4 rem(≈64 px) 정도이므로 나머지를 스크롤 영역으로 */
+.history-content {
+  @apply p-6 overflow-y-auto flex flex-col;
+  height: calc(100vh - 4rem);
+}
+
+/* UL 자체는 스크롤 책임이 없음 */
+#history-list {
+  @apply flex flex-col;
 }
 
 .history-panel.open {
@@ -111,10 +124,6 @@ body {
 
 .history-header {
   @apply flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50;
-}
-
-.history-content {
-  @apply p-6 overflow-y-auto h-full;
 }
 
 #history-list .item {

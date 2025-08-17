@@ -1,4 +1,5 @@
 import { RealtimeAgent, RealtimeSession } from '@openai/agents/realtime';
+import { scrollHistoryToBottom } from './utils/scroll';
 
 const startBtn = document.getElementById('start') as HTMLButtonElement;
 const stopBtn = document.getElementById('stop') as HTMLButtonElement;
@@ -96,6 +97,7 @@ function renderHistory() {
   }).join('');
 
   wrap.innerHTML = html || '<div class="meta">— no items —</div>';
+  scrollHistoryToBottom();
 }
 
 
