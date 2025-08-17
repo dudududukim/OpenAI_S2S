@@ -59,6 +59,10 @@ python main.py
 git pull --rebase origin main
 ```
 
+### References
+
+- ElevenLabs_2025-08-17T15_15_42_Salang_pvc_sp100_s50_sb33_se0_b_m2.mp3 : elevenlabs
+
 ## 📝 Recent Commits
 
 | Hash | Message | Author | Date |

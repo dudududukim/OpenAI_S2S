@@ -50,7 +50,16 @@ body {
 }
 
 .log-header {
-  @apply px-6 py-4 border-b border-gray-200 bg-gray-50;
+  @apply px-6 py-4 border-b border-gray-200 bg-gray-50 flex items-center;
+}
+
+.log-header h2 {
+  @apply mr-4;
+}
+
+.log-header span {
+  @apply text-gray-500;
+  margin-right: auto; /* 버튼을 오른쪽 끝으로 밀어냄 */
 }
 
 .log-content {
@@ -222,4 +231,28 @@ button:focus-visible {
   to {
     transform: translate(-50%, -50%) rotate(360deg);
   }
+}
+
+.btn-aec-calibration {
+  @apply relative inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-lg border border-gray-300;
+  background-color: transparent;
+  color: var(--primary);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.btn-aec-calibration .aec-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: var(--primary);
+  opacity: 0.2;
+  transition: width linear;
+}
+
+.btn-aec-calibration .aec-text {
+  position: relative;
+  z-index: 1;
 }

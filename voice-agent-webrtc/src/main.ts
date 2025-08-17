@@ -131,9 +131,11 @@ const Korean_20_agent = new RealtimeAgent({
     - Popular Korean entertainment (K-pop, dramas, movies)
     - Technology and social media trends
     - Food recommendations and lifestyle tips
-    
-    Remember: You're talking to someone in their 20s, so be relatable and authentic!`
+
+    STYLE ADDITION:
+    - Keep responses short, snappy, and to the point (짧고 간결하게).`
 })
+
 
 const agent = new RealtimeAgent({
     name: 'Assistant',
@@ -388,4 +390,50 @@ menuBtn?.addEventListener('click', () => {
 const historyCloseBtn = document.querySelector('.history-header button') as HTMLButtonElement;
 historyCloseBtn?.addEventListener('click', () => {
   historyPanel?.classList.remove('open');
+});
+
+const aecBtn = document.getElementById('aec-calibration') as HTMLButtonElement;
+const aecProgress = aecBtn.querySelector('.aec-progress') as HTMLElement;
+let aecAudio: HTMLAudioElement | null = null;
+
+aecBtn.addEventListener('click', async () => {
+    if (aecAudio && !aecAudio.paused) return;
+    
+    try {
+        aecAudio = new Audio('assets/audio/ElevenLabs_2025-08-17T15_15_42_Salang_pvc_sp100_s50_sb33_se0_b_m2.mp3');
+        aecBtn.disabled = true;
+        aecProgress.style.width = '0%';
+
+        // --- GainNode 추가 ---
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const track = audioCtx.createMediaElementSource(aecAudio);
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = 1.2; // +20%
+        track.connect(gainNode).connect(audioCtx.destination);
+
+        aecAudio.addEventListener('timeupdate', () => {
+            const progress = (aecAudio!.currentTime / aecAudio!.duration) * 100;
+            aecProgress.style.width = `${progress}%`;
+        });
+        
+        aecAudio.addEventListener('ended', () => {
+            aecProgress.style.width = '0%';
+            aecBtn.disabled = false;
+            log('AEC 캘리브레이션 완료');
+        });
+        
+        aecAudio.addEventListener('error', () => {
+            aecProgress.style.width = '0%';
+            aecBtn.disabled = false;
+            log('AEC 캘리브레이션 오류');
+        });
+        
+        await audioCtx.resume(); // context 활성화 (필수)
+        await aecAudio.play();
+        log('AEC 캘리브레이션 시작');
+    } catch (error) {
+        aecProgress.style.width = '0%';
+        aecBtn.disabled = false;
+        log('오디오 재생 실패:', error);
+    }
 });
