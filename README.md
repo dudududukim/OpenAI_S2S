@@ -1,6 +1,7 @@
 # 1. webRTC based S2S
 
 [OpenAI Voice Agents Quickstart](https://openai.github.io/openai-agents-js/guides/voice-agents/quickstart/)
+[Upgrade guide](https://openai.github.io/openai-agents-js/guides/voice-agents/build/)
 
 webRTC based OpenAI realtime api should be written on JS type.
 
