@@ -21,44 +21,45 @@ function getCurrentTimeString(): string {
 function log(...args: any[]): void;
 function log(type: LogType, ...args: any[]): void;
 function log(typeOrFirstArg: LogType | any, ...args: any[]) {
-    let logType: LogType = 'default';
-    let logArgs: any[];
+  let logType: LogType = 'default';
+  let logArgs: any[];
 
-    // 첫 번째 인자가 LogType인지 확인
-    if (typeof typeOrFirstArg === 'string' && 
-        ['session', 'transport', 'handoff', 'default'].includes(typeOrFirstArg)) {
-        logType = typeOrFirstArg as LogType;
-        logArgs = args;
-    } else {
-        logArgs = [typeOrFirstArg, ...args];
+  if (typeof typeOrFirstArg === 'string' && 
+      ['session', 'transport', 'handoff', 'default'].includes(typeOrFirstArg)) {
+    logType = typeOrFirstArg as LogType;
+    logArgs = args;
+  } else {
+    logArgs = [typeOrFirstArg, ...args];
+  }
+
+  const timeStr = getCurrentTimeString();
+  const line = logArgs.map(a => {
+    if (typeof a === 'string') {
+      return a;
     }
-
-    const timeStr = getCurrentTimeString();
-    const line = logArgs.map(a => {
-      if (typeof a === 'string') {
-        return a;
+    return JSON.stringify(a, (key, value) => {
+      if (key === 'audio' && typeof value === 'string' && value.length > 50) {
+        return value.substring(0, 50) + '...[audio data truncated]';
       }
-      return JSON.stringify(a, (key, value) => {
-        // audio 필드가 문자열이고 길면 짧게 자르기
-        if (key === 'audio' && typeof value === 'string' && value.length > 50) {
-          return value.substring(0, 50) + '...[audio data truncated]';
-        }
-        return value;
-      });
-    }).join(' ');
+      return value;
+    });
+  }).join(' ');
 
-    // 색깔별 스타일 적용
-    const colors = {
-        session: '#2196F3',    // 파란색 - session 이벤트
-        transport: '#FF9800',  // 주황색 - transport 이벤트
-        handoff : '#9C27B0',
-        default: '#333333'     // 기본 색깔
-    };
+  const colors = {
+    session: '#2196F3',
+    transport: '#FF9800', 
+    handoff: '#9C27B0',
+    default: '#374151',
+    timestamp: '#9CA3AF'
+  };
 
-    const coloredLine = `<span style="color: ${colors[logType]};">${timeStr} ${line}</span>\n`;
-    logEl.innerHTML += coloredLine;
-    logEl.scrollTop = logEl.scrollHeight;
+  // 시간은 default 색깔, 로그 내용은 타입별 색깔로 분리
+  const coloredLine = `<span style="color: ${colors['timestamp']};">${timeStr}</span> <span style="color: ${colors[logType]};">${line}</span>\n`;
+  
+  logEl.innerHTML += coloredLine;
+  logEl.scrollTop = logEl.scrollHeight;
 }
+
 
 
 // -------------- code(history log) --------------
@@ -374,3 +375,17 @@ function showPopup(message: string) {
     setTimeout(() => el.remove(), 200);
   }, 4000);
 }
+
+// hamburger menu
+
+const menuBtn = document.querySelector('.menu-button') as HTMLButtonElement;
+const historyPanel = document.querySelector('.history-panel') as HTMLElement;
+
+menuBtn?.addEventListener('click', () => {
+  historyPanel?.classList.toggle('open');
+});
+
+const historyCloseBtn = document.querySelector('.history-header button') as HTMLButtonElement;
+historyCloseBtn?.addEventListener('click', () => {
+  historyPanel?.classList.remove('open');
+});
