@@ -63,6 +63,8 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `7b32b21` | fix: readme | Duhyeon | 2025-08-18 |
+| `fbf4fcd` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `03922fb` | feat: tailwind CSS bomb! + point color:purple | Duhyeon | 2025-08-18 |
 | `de3abab` | feat: tailwind CSS bomb! + point color:purple | Duhyeon | 2025-08-18 |
 | `c37b4d3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
@@ -71,7 +73,5 @@ git pull --rebase origin main
 | `1768ea6` | fix: style.css recovered | Duhyeon | 2025-08-17 |
 | `eb66641` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `08abb7b` | feat: handoff(korean 20 agent) + logging time | Duhyeon | 2025-08-17 |
-| `b4794b3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-15 |
-| `1b01044` | feat: error box added and session.message send if session started | Duhyeon | 2025-08-15 |
 
-*Last updated: 2025-08-17 15:07:32 UTC*
+*Last updated: 2025-08-17 15:08:27 UTC*
