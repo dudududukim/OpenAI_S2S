@@ -7,7 +7,16 @@ const logEl = document.getElementById('log') as HTMLPreElement;
 let session: RealtimeSession | null = null;
 
 // 로그 타입 정의
-type LogType = 'session' | 'transport' | 'default';
+type LogType = 'session' | 'transport' | 'handoff' | 'default';
+
+function getCurrentTimeString(): string {
+  const now = new Date();
+  const h = now.getHours().toString().padStart(2, '0');
+  const m = now.getMinutes().toString().padStart(2, '0');
+  const s = now.getSeconds().toString().padStart(2, '0');
+  const ms = now.getMilliseconds().toString().padStart(3, '0');
+  return `${h}:${m}:${s}.${ms}`;
+}
 
 function log(...args: any[]): void;
 function log(type: LogType, ...args: any[]): void;
@@ -17,13 +26,14 @@ function log(typeOrFirstArg: LogType | any, ...args: any[]) {
 
     // 첫 번째 인자가 LogType인지 확인
     if (typeof typeOrFirstArg === 'string' && 
-        ['session', 'transport', 'default'].includes(typeOrFirstArg)) {
+        ['session', 'transport', 'handoff', 'default'].includes(typeOrFirstArg)) {
         logType = typeOrFirstArg as LogType;
         logArgs = args;
     } else {
         logArgs = [typeOrFirstArg, ...args];
     }
 
+    const timeStr = getCurrentTimeString();
     const line = logArgs.map(a => {
       if (typeof a === 'string') {
         return a;
@@ -41,13 +51,15 @@ function log(typeOrFirstArg: LogType | any, ...args: any[]) {
     const colors = {
         session: '#2196F3',    // 파란색 - session 이벤트
         transport: '#FF9800',  // 주황색 - transport 이벤트
+        handoff : '#9C27B0',
         default: '#333333'     // 기본 색깔
     };
 
-    const coloredLine = `<span style="color: ${colors[logType]};">${line}</span>\n`;
+    const coloredLine = `<span style="color: ${colors[logType]};">${timeStr} ${line}</span>\n`;
     logEl.innerHTML += coloredLine;
     logEl.scrollTop = logEl.scrollHeight;
 }
+
 
 // -------------- code(history log) --------------
 
@@ -95,13 +107,58 @@ async function getClientKey(): Promise<string> {
     return apiKey;
 }
 
+const Korean_20_agent = new RealtimeAgent({
+    name: 'Korean_20_agent',
+    instructions: `You are a specialized Korean speaking assistant for people in their 20s.
+    
+    COMMUNICATION STYLE:
+    - Use casual, friendly Korean (반말/존댓말 적절히 혼용)
+    - Use 20s generation slang and expressions naturally
+    - Reference popular culture, trends, and topics relevant to Korean 20-somethings
+    - Understand concerns about career, relationships, studies, and social life
+    
+    PERSONALITY:
+    - Be like a friendly peer, not overly formal
+    - Show empathy for 20s-specific struggles (job hunting, dating, adulting)
+    - Use expressions like "아 진짜?", "대박", "ㅋㅋ", "그쵸" naturally
+    - Be encouraging and supportive with a youthful energy
+    
+    TOPICS TO EXCEL AT:
+    - Career advice and job searching tips
+    - University life and study tips  
+    - Dating and relationship advice
+    - Popular Korean entertainment (K-pop, dramas, movies)
+    - Technology and social media trends
+    - Food recommendations and lifestyle tips
+    
+    Remember: You're talking to someone in their 20s, so be relatable and authentic!`
+})
+
+const agent = new RealtimeAgent({
+    name: 'Assistant',
+    instructions: `You are a helpful voice assistant. 
+    
+    FIRST PRIORITY: If you don't know the user's age, ask for their age in a friendly way.
+    
+    HANDOFF RULES:
+    - If user speaks Korean AND is in their 20s (20-29 years old), handoff to Korean_20_agent
+    - If user speaks Korean but is NOT in their 20s, provide general Korean assistance yourself
+    - If user speaks other languages, provide general assistance
+    
+    Always be polite and helpful in determining user's age and language preference.`,
+    
+    handoffs: [Korean_20_agent]
+});
+
+
 startBtn.onclick = async () => {
     if (session) return;
 
-    try {const agent = new RealtimeAgent({
-          name: 'Assistant',
-          instructions: 'You are a helpful voice assistant.'
-      });
+    try {
+    //     const agent = new RealtimeAgent({
+    //       name: 'Assistant',
+    //       instructions: 'You are a helpful voice assistant.'
+    //   });
 
       session = new RealtimeSession(agent, {
           model: 'gpt-4o-realtime-preview-2025-06-03',
@@ -110,7 +167,7 @@ startBtn.onclick = async () => {
               model: 'gpt-4o-mini-transcribe',
               language: 'ko',
             },
-          }
+        }
       });
 
       // Transport 이벤트에서 delta 이벤트들을 필터링
