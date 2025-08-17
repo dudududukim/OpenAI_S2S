@@ -63,6 +63,8 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `9a3b762` | feat: transforming to tailwind css | Duhyeon | 2025-08-17 |
+| `44c6b24` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `1768ea6` | fix: style.css recovered | Duhyeon | 2025-08-17 |
 | `eb66641` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `08abb7b` | feat: handoff(korean 20 agent) + logging time | Duhyeon | 2025-08-17 |
@@ -71,7 +73,5 @@ git pull --rebase origin main
 | `b1aee27` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-14 |
 | `ef73530` | feat: history hamburger menu added(you can see the transcription of webRTC S2S conversation) | Duhyeon | 2025-08-14 |
 | `4c4d23f` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-13 |
-| `8500eba` | feat: webUI applied for logging realtimesession events | Duhyeon | 2025-08-13 |
-| `0513586` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-11 |
 
-*Last updated: 2025-08-17 13:37:00 UTC*
+*Last updated: 2025-08-17 14:05:23 UTC*
