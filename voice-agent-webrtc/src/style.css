@@ -59,6 +59,9 @@ body {
   height: calc(100vh - 30vh);
   white-space: pre;
   overflow-x: auto;
+  scroll-behavior: smooth;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 
