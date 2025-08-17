@@ -63,6 +63,9 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `03922fb` | feat: tailwind CSS bomb! + point color:purple | Duhyeon | 2025-08-18 |
+| `de3abab` | feat: tailwind CSS bomb! + point color:purple | Duhyeon | 2025-08-18 |
+| `c37b4d3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `9a3b762` | feat: transforming to tailwind css | Duhyeon | 2025-08-17 |
 | `44c6b24` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `1768ea6` | fix: style.css recovered | Duhyeon | 2025-08-17 |
@@ -70,8 +73,5 @@ git pull --rebase origin main
 | `08abb7b` | feat: handoff(korean 20 agent) + logging time | Duhyeon | 2025-08-17 |
 | `b4794b3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-15 |
 | `1b01044` | feat: error box added and session.message send if session started | Duhyeon | 2025-08-15 |
-| `b1aee27` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-14 |
-| `ef73530` | feat: history hamburger menu added(you can see the transcription of webRTC S2S conversation) | Duhyeon | 2025-08-14 |
-| `4c4d23f` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-13 |
 
-*Last updated: 2025-08-17 14:05:23 UTC*
+*Last updated: 2025-08-17 15:07:32 UTC*
