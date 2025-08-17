@@ -63,6 +63,8 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `1768ea6` | fix: style.css recovered | Duhyeon | 2025-08-17 |
+| `eb66641` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `08abb7b` | feat: handoff(korean 20 agent) + logging time | Duhyeon | 2025-08-17 |
 | `b4794b3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-15 |
 | `1b01044` | feat: error box added and session.message send if session started | Duhyeon | 2025-08-15 |
@@ -71,7 +73,5 @@ git pull --rebase origin main
 | `4c4d23f` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-13 |
 | `8500eba` | feat: webUI applied for logging realtimesession events | Duhyeon | 2025-08-13 |
 | `0513586` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-11 |
-| `06af719` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-10 |
-| `5f0dba7` | fix: websocket version slight change(not perfect) | Duhyeon | 2025-08-10 |
 
-*Last updated: 2025-08-17 11:57:32 UTC*
+*Last updated: 2025-08-17 13:37:00 UTC*
