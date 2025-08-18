@@ -67,6 +67,7 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `c3f97c3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `7b433e0` | fix: history-list fitting(.css) and history-pannel scolling(.ts) | Duhyeon | 2025-08-18 |
 | `263c0a9` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `4892b3f` | feat: AEC calibration added | Duhyeon | 2025-08-18 |
@@ -76,6 +77,5 @@ git pull --rebase origin main
 | `03922fb` | feat: tailwind CSS bomb! + point color:purple | Duhyeon | 2025-08-18 |
 | `de3abab` | feat: tailwind CSS bomb! + point color:purple | Duhyeon | 2025-08-18 |
 | `c37b4d3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
-| `9a3b762` | feat: transforming to tailwind css | Duhyeon | 2025-08-17 |
 
-*Last updated: 2025-08-17 17:10:41 UTC*
+*Last updated: 2025-08-18 06:28:03 UTC*
