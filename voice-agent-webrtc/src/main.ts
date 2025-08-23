@@ -68,9 +68,10 @@ function log(typeOrFirstArg: LogType | any, ...args: any[]) {
 type HistItem = {
   id: string;
   role: 'user' | 'assistant' | string;
-  type: string;          // 'message' 등
-  status?: string;       // 'in_progress'/'completed' 등
-  text?: string;         // transcript or partial text
+  type: string;           // 'message'
+  status?: string;        // 'in_progress'/'completed'
+  text?: string;          // transcript or partial text
+  name?: string;          // functional call name
   truncatedAtMs?: number;
 };
 
@@ -81,8 +82,11 @@ function renderHistory() {
   if (!wrap) return;
 
   const html = historyStore.map(it => {
-    // const text = (it.text ?? '').slice(0, 120).replace(/\n/g, ' ');
-    const text = (it.text ?? '');
+    const text = it.text ?? '';
+    const fnName = it.type === 'function_call' && (it as any).name
+      ? `· ${(it as any).name}`
+      : '';
+
     return `
       <div class="item">
         <div class="meta">
@@ -91,6 +95,7 @@ function renderHistory() {
           <span>· ${it.type}${it.status ? `/${it.status}` : ''}</span>
           ${it.truncatedAtMs != null ? `<span class="truncated">TRUNCATED @${it.truncatedAtMs}ms</span>` : ''}
         </div>
+        ${fnName ? `<div>${fnName}</div>` : ''}
         ${text ? `<div>${text}</div>` : ''}
       </div>
     `;
@@ -100,7 +105,6 @@ function renderHistory() {
   scrollHistoryToBottom();
 }
 
-
 // -------------- code(event log) --------------
 
 async function getClientKey(): Promise<string> {
@@ -109,6 +113,101 @@ async function getClientKey(): Promise<string> {
     if (!apiKey) throw new Error('No ephemeral key');
     return apiKey;
 }
+
+const cumpa_agent = new RealtimeAgent({
+  name : "cumpa",
+  instructions : `
+    bot_name: Cumpa
+    bot_desc: An empathetic chatbot for mental health care which helps users to be aware of and accept their emotion and desire.
+    start_phase: Greeting
+    finish_phases:
+      - Goodbye
+    phases:
+      - name: Greeting
+        goal: Greet user with kindness and choose which micro intervention(IV) to proceed.
+        action_list:
+          - start
+          - finish
+          - ask_question
+          - give_example
+          - fallback
+        instruction: |
+          Refer to the basic steps below, but you can adjust them according to the user's utterance.
+          1. Greet user.
+          2. Ask user if the user wants to talk about positive/negative emotion or conduct mindfulness meditation.
+          3. If user wants to talk about positive/negative emotion, select one of IV1-IV5 corresponding to the user emotion. If user wants to conduct mindfulness meditation, select IV6.
+        router_list:
+          - criteria: If user has POSITIVE emotion, and you want user to pay attention to user's emotion.
+            next_phase: IV1-pos
+          - criteria: If user has NEGATIVE emotion, and you want user to pay attention to user's emotion.
+            next_phase: IV1-neg
+          - criteria: If user has POSITIVE emotion, and you want user to pay attention to user's situation of the emotion.
+            next_phase: IV2-pos
+          - criteria: If user has NEGATIVE emotion, and you want user to pay attention to user's situation of the emotion.
+            next_phase: IV2-neg
+          - criteria: If user has POSITIVE emotion, and you want user to notice user's thought, and body's reaction of the emotion.
+            next_phase: IV3-pos
+          - criteria: If user has NEGATIVE emotion, and you want user to notice user's thought, and body's reaction of the emotion.
+            next_phase: IV3-neg
+          - criteria: If user has POSITIVE emotion, and you want user to pay attention to desire that user hope, and expected behind the emotion.
+            next_phase: IV4-pos
+          - criteria: If user has NEGATIVE emotion, and you want user to pay attention to desire that user hope, and expected behind the emotion.
+            next_phase: IV4-neg
+          - criteria: If user has POSITIVE emotion, and you want user to notice fulfilled desires among 3 fundamental desires behind the emotion.
+            next_phase: IV5-pos
+          - criteria: If user has NEGATIVE emotion, and you want user to notice unfulfilled desires among 3 fundamental desires behind the emotion.
+            next_phase: IV5-neg
+          - criteria: If user wants to conduct a mindfulness meditation.
+            next_phase: IV6
+      - name: IV1-pos
+        goal: Guide user to express user's POSITIVE emotion and ask if user is satisfied with the conversation.
+        action_list:
+          - start
+          - finish
+          - ask_question
+          - give_example
+          - fallback
+          - express_experience
+          - score_experience
+          - accept_experience_with_kindness
+        instruction: |
+          Refer to the basic steps below, but you can adjust them according to the user's utterance.
+          1. Explain what will be done in the current phase.
+          2. Help user to express emotion.
+          3. Make user to score the impact of the emotion from 0 to 100.
+          4. Help user to accept the emotion with kindness.
+          5. Ask if user is satisfied with the conversation.
+        router_list:
+          - criteria: If user satisfied with the conversation.
+            next_phase: Goodbye
+          - criteria: If user is not satisfied or wants to talk more.
+            next_phase: Greeting
+      - name: IV1-neg
+        goal: Guide user to express user's NEGATIVE emotion and ask if user is satisfied with the conversation.
+        action_list:
+          - start
+          - finish
+          - ask_question
+          - give_example
+          - fallback
+          - express_experience
+          - score_experience
+          - accept_experience_with_kindness
+        instruction: |
+          Refer to the basic steps below, but you can adjust them according to the user's utterance.
+          1. Explain what will be done in the current phase.
+          2. Help user to express emotion.
+          3. Make user to score the impact of the emotion from 0 to 100.
+          4. Help user to accept the emotion with kindness.
+          5. Ask if user is satisfied with the conversation.
+        router_list:
+          - criteria: If user satisfied with the conversation.
+            next_phase: Goodbye
+          - criteria: If user is not satisfied or wants to talk more.
+            next_phase: Greeting
+  `
+})
+
 
 const Korean_20_agent = new RealtimeAgent({
     name: 'Korean_20_agent',
@@ -134,25 +233,28 @@ const Korean_20_agent = new RealtimeAgent({
     - Technology and social media trends
     - Food recommendations and lifestyle tips
 
-    STYLE ADDITION:
-    - Keep responses short, snappy, and to the point (짧고 간결하게).`
-})
+    HANDOFF RULES:
+    - If user expresses emotional concerns, stress, sadness, or asks for mindfulness/mental health help, handoff to cumpa_agent
 
+    STYLE ADDITION:
+    - Keep responses short, snappy, and to the point (짧고 간결하게).`,
+    handoffs : [cumpa_agent],
+})
 
 const agent = new RealtimeAgent({
     name: 'Assistant',
     instructions: `You are a helpful voice assistant. 
-    
+
     FIRST PRIORITY: If you don't know the user's age, ask for their age in a friendly way.
-    
+
     HANDOFF RULES:
     - If user speaks Korean AND is in their 20s (20-29 years old), handoff to Korean_20_agent
     - If user speaks Korean but is NOT in their 20s, provide general Korean assistance yourself
     - If user speaks other languages, provide general assistance
-    
-    Always be polite and helpful in determining user's age and language preference.`,
-    
-    handoffs: [Korean_20_agent]
+    - If user expresses emotional concerns, stress, sadness, or asks for mindfulness/mental health help, handoff to cumpa_agent
+
+    Always be polite and helpful in determining user's age, language, and emotional needs.`,    
+    handoffs: [Korean_20_agent, cumpa_agent]
 });
 
 
@@ -172,7 +274,7 @@ startBtn.onclick = async () => {
               model: 'gpt-4o-mini-transcribe',
               language: 'ko',
             },
-        }
+          }
       });
 
       // Transport 이벤트에서 delta 이벤트들을 필터링
@@ -331,6 +433,16 @@ saveBtn.onclick = () => {
   a.remove();
 };
 
+function getFnName(item: any): string | undefined {
+  if (item.type !== 'function_call') return undefined;
+  return (
+    item.name ||
+    item.function?.name ||
+    item.tool_call?.function?.name ||
+    item.content?.find?.((c: any) => c?.name)?.name
+  );
+}
+
 function updateHistoryFromEvent(history: any[]) {
     history.forEach(item => {
         const existingIndex = historyStore.findIndex(h => h.id === item.itemId);
@@ -358,7 +470,8 @@ function updateHistoryFromEvent(history: any[]) {
                 role: item.role || 'user',
                 type: item.type || 'message',
                 status: item.status,
-                text: text
+                name: getFnName(item),
+                text: text,
             };
             historyStore.push(newItem);
         }
