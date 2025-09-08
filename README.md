@@ -67,6 +67,7 @@ git pull --rebase origin main
 
 | Hash | Message | Author | Date |
 |------|---------|--------|------|
+| `d578d64` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-09-01 |
 | `5073420` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-25 |
 | `9273f11` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-23 |
 | `45726d6` | feat : function call name is avaliable at history panel, cumpa handoff added | Duhyeon | 2025-08-23 |
@@ -76,6 +77,5 @@ git pull --rebase origin main
 | `263c0a9` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
 | `4892b3f` | feat: AEC calibration added | Duhyeon | 2025-08-18 |
 | `a1a025a` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
-| `7b32b21` | fix: readme | Duhyeon | 2025-08-18 |
 
-*Last updated: 2025-09-01 06:26:22 UTC*
+*Last updated: 2025-09-08 06:25:08 UTC*
