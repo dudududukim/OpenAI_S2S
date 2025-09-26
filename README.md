@@ -63,19 +63,3 @@ git pull --rebase origin main
 
 - ElevenLabs_2025-08-17T15_15_42_Salang_pvc_sp100_s50_sb33_se0_b_m2.mp3 : elevenlabs
 
-## 📝 Recent Commits
-
-| Hash | Message | Author | Date |
-|------|---------|--------|------|
-| `0a882ee` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-09-15 |
-| `4767a7b` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-09-08 |
-| `d578d64` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-09-01 |
-| `5073420` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-25 |
-| `9273f11` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-23 |
-| `45726d6` | feat : function call name is avaliable at history panel, cumpa handoff added | Duhyeon | 2025-08-23 |
-| `eebb856` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-18 |
-| `c3f97c3` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
-| `7b433e0` | fix: history-list fitting(.css) and history-pannel scolling(.ts) | Duhyeon | 2025-08-18 |
-| `263c0a9` | docs: auto-update commit log [skip ci] | github-actions[bot] | 2025-08-17 |
-
-*Last updated: 2025-09-22 06:25:04 UTC*
